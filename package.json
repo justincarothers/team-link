@@ -1,0 +1,26 @@
+{
+  "name": "team-link",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Self-hosted gaming screen-sharing service",
+  "scripts": {
+    "dev:server": "pnpm --filter @team-link/server dev",
+    "dev:desktop": "pnpm --filter @team-link/desktop dev",
+    "dev:web": "pnpm --filter @team-link/web dev",
+    "build": "pnpm -r build",
+    "build:shared": "pnpm --filter @team-link/shared build",
+    "build:ui": "pnpm --filter @team-link/ui build",
+    "build:server": "pnpm --filter @team-link/server build",
+    "build:web": "pnpm --filter @team-link/web build",
+    "build:desktop": "pnpm --filter @team-link/desktop build",
+    "lint": "pnpm -r lint",
+    "typecheck": "pnpm -r typecheck"
+  },
+  "engines": {
+    "node": ">=18",
+    "pnpm": ">=8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["electron", "esbuild", "leveldown"]
+  }
+}

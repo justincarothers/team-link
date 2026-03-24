@@ -39,3 +39,7 @@ import('./CollabNotes.js').then((mod) => {
 import('./ResourceMap.js').then((mod) => {
   gameToolRegistry.register(mod.resourceMapTool);
 });
+
+import('./StratDraw.js').then((mod) => {
+  gameToolRegistry.register(mod.stratDrawTool);
+});

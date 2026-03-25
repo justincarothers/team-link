@@ -12,3 +12,24 @@ out/
 Thumbs.db
 
 .claude/
+
+# Logs
+*.log
+
+# Secrets / credentials
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+*.secret
+credentials*.json
+secrets*.json
+*.sqlite
+*.db
+data/
+
+# OS / editor
+*.swp
+*.swo
+*~

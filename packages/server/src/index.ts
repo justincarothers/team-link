@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import { DEFAULT_PORT, WS_SIGNAL_PATH, WS_YJS_PATH } from '@team-link/shared';
 import { handleSignalingMessage, handleDisconnect } from './signaling.js';
 import { handleYjsConnection } from './yjs-sync.js';
+import { createFlightMonitor } from './flights.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -13,10 +14,37 @@ const PORT = parseInt(process.env.PORT ?? String(DEFAULT_PORT), 10);
 
 const app = express();
 const server = createServer(app);
+const flightMonitor = createFlightMonitor();
+
+app.use(express.json());
 
 // Health check
 app.get('/api/health', (_req, res) => {
   res.json({ status: 'ok', timestamp: Date.now() });
+});
+
+app.get('/api/flights/summary', async (_req, res) => {
+  res.json(await flightMonitor.getSummary());
+});
+
+app.get('/api/flights/routes', async (_req, res) => {
+  res.json(await flightMonitor.getLatestRoutes());
+});
+
+app.get('/api/flights/history/:destination', async (req, res) => {
+  res.json(await flightMonitor.getHistory(req.params.destination));
+});
+
+app.post('/api/flights/scan', async (_req, res) => {
+  try {
+    const snapshot = await flightMonitor.runScan();
+    res.json({ ok: true, snapshot });
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      error: error instanceof Error ? error.message : 'Unknown scan error',
+    });
+  }
 });
 
 // Serve web viewer in production
@@ -72,3 +100,5 @@ server.listen(PORT, () => {
   console.log(`  Signaling: ws://localhost:${PORT}${WS_SIGNAL_PATH}`);
   console.log(`  Yjs sync:  ws://localhost:${PORT}${WS_YJS_PATH}/:room/:tool`);
 });
+
+flightMonitor.start();

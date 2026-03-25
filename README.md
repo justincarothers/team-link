@@ -55,6 +55,30 @@ pnpm build            # build all packages
 pnpm typecheck        # type-check everything
 ```
 
+## Flight Monitor
+
+This repo also includes a local flight monitor at `/flights` backed by the server package.
+
+1. Copy [`.env.example`](/home/zephyrus/team-link/.env.example) to `.env` and add your Amadeus test credentials.
+2. Start the server and web app:
+
+```bash
+pnpm dev:server
+pnpm dev:web
+```
+
+3. Open `http://localhost:5173/flights`.
+
+What it does:
+
+- scans the current real nonstop international `PDX` routes once per day
+- stores snapshots in `data/flights-monitor.json`
+- detects new lows and threshold-breaking fares
+- exposes JSON endpoints under `/api/flights/*`
+- can POST alerts to `FLIGHT_MONITOR_WEBHOOK_URL`
+
+The destination list is intentionally configurable through `FLIGHT_MONITOR_DESTINATIONS` so you can tune the watched nonstop routes without code changes.
+
 ## License
 
 [MIT](LICENSE)

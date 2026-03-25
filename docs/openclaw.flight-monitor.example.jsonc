@@ -1,0 +1,52 @@
+{
+  // Example OpenClaw config snippet for using Codex via ACP and this local flight monitor.
+  // Merge into your real ~/.openclaw/openclaw.json
+  env: {
+    // If you want the main agent to use Codex subscription OAuth, log in first:
+    // openclaw models auth login --provider openai-codex
+  },
+
+  agents: {
+    defaults: {
+      model: {
+        primary: "openai-codex/gpt-5.4",
+        fallbacks: ["openai/gpt-5-mini"],
+      },
+    },
+    list: [
+      {
+        id: "main",
+        default: true,
+      },
+      {
+        id: "codex",
+        name: "Codex ACP",
+        runtime: {
+          type: "acp",
+          acp: {
+            agent: "codex",
+            backend: "acpx",
+            mode: "persistent",
+            cwd: "/home/zephyrus/team-link",
+          },
+        },
+      },
+    ],
+  },
+
+  acp: {
+    enabled: true,
+    dispatch: { enabled: true },
+    backend: "acpx",
+    defaultAgent: "codex",
+    allowedAgents: ["codex"],
+    maxConcurrentSessions: 4,
+    runtime: {
+      ttlMinutes: 240,
+    },
+  },
+
+  // Discord is the built-in channel with thread-bound ACP support.
+  // Ask OpenClaw:
+  // "Start a persistent Codex session in a thread here and use /api/flights/summary for fare context."
+}

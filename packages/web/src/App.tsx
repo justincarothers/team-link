@@ -9,12 +9,17 @@ import {
   GameToolPanel,
 } from '@team-link/ui';
 import type { ServerMessage } from '@team-link/shared';
+import { FlightsDashboard } from './FlightsDashboard';
 
 const SERVER_URL = window.location.origin;
 
 type Mode = 'lobby' | 'room';
 
 export default function App() {
+  if (window.location.pathname.startsWith('/flights')) {
+    return <FlightsDashboard />;
+  }
+
   const [mode, setMode] = useState<Mode>('lobby');
   const [name, setName] = useState('');
   const [code, setCode] = useState('');
